@@ -60,13 +60,13 @@ def survival_stats(data, outcomes, key, filters = []):
     
     # Check that the key exists
     if key not in data.columns.values :
-        print "'{}' is not a feature of the Titanic data. Did you spell something wrong?".format(key)
+        print("'{}' is not a feature of the Titanic data. Did you spell something wrong?".format(key))
         return False
 
     # Return the function before visualizing if 'Cabin' or 'Ticket'
     # is selected: too many unique categories to display
     if(key == 'Cabin' or key == 'PassengerId' or key == 'Ticket'):
-        print "'{}' has too many unique categories to display! Try a different feature.".format(key)
+        print("'{}' has too many unique categories to display! Try a different feature.".format(key))
         return False
 
     # Merge data and outcomes into single dataframe
@@ -88,11 +88,6 @@ def survival_stats(data, outcomes, key, filters = []):
         # Remove NaN values from Age data
         all_data = all_data[~np.isnan(all_data[key])]
         
-        # Divide the range of data into bins and count survival rates
-        min_value = all_data[key].min()
-        max_value = all_data[key].max()
-        value_range = max_value - min_value
-
         # 'Fares' has larger range of values than 'Age' so create more bins
         if(key == 'Fare'):
             bins = np.arange(0, all_data['Fare'].max() + 20, 20)
@@ -151,6 +146,6 @@ def survival_stats(data, outcomes, key, filters = []):
     # Report number of passengers with missing values
     if sum(pd.isnull(all_data[key])):
         nan_outcomes = all_data[pd.isnull(all_data[key])]['Survived']
-        print "Passengers with missing '{}' values: {} ({} survived, {} did not survive)".format( \
-              key, len(nan_outcomes), sum(nan_outcomes == 1), sum(nan_outcomes == 0))
+        print("Passengers with missing '{}' values: {} ({} survived, {} did not survive)".format( \
+              key, len(nan_outcomes), sum(nan_outcomes == 1), sum(nan_outcomes == 0)))
 
