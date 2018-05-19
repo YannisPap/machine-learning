@@ -130,17 +130,16 @@ class LearningAgent(Agent):
         # Otherwise, choose an action with the highest Q-value for the current state
         # Be sure that when choosing an action with highest Q-value that you randomly select between actions that "tie".
         random_action = random.choice(self.valid_actions)
-        maxQ = self.get_maxQ(state)
-        best_actions = []
-
-        for action, value in self.Q[state].items():
-            if value == maxQ:
-                best_actions.append(action)
-
-        best_action = random.choice(best_actions)
-
 
         if self.learning:
+            maxQ = self.get_maxQ(state)
+            best_actions = []
+
+            for action, value in self.Q[state].items():
+                if value == maxQ:
+                    best_actions.append(action)
+
+            best_action = random.choice(best_actions)
             action = np.random.choice([random_action, best_action], p=[self.epsilon, 1 - self.epsilon])
         else:
             action = random_action
@@ -160,7 +159,7 @@ class LearningAgent(Agent):
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
 
         if self.learning:
-            self.Q[state][action] = self.Q[state][action] + self.alpha*(reward - self.Q[state][action])
+            self.Q[state][action] += self.alpha*(reward - self.Q[state][action])
 
         return
 

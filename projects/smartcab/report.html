@@ -11882,7 +11882,7 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong><br>
-The Smartcab does not travel in any direction because there is not a destination assigned. The effect of staying still is to take a positive reward whenever the traffic light is red (for not passing it) and a negative reward whenever it is red.</p>
+The Smartcab does not travel in any direction because there is not a destination assigned. The effect of staying still is to take a positive reward whenever the traffic light is red (for not passing it) and a negative reward whenever it is green.</p>
 
 </div>
 </div>
@@ -12138,7 +12138,8 @@ if we add the state of each feature we have:</p>
 </tr>
 </tbody>
 </table>
-<p>The above States create a space of size 2x3x4x4 = 96.<br>
+<p>As you may notice, we omitted the input/right. This is because the agent cannot collide with a right coming car. When the agent has a green light, they have to give way and when they have green light, the agent can only turn right. 
+The above States create a space of size 2x3x4x4 = 96.<br>
 This size is small enough for an agent to learn within a reasonable number of training trials.</p>
 
 </div>
@@ -12496,19 +12497,31 @@ where 'p' is a parameter I used to adjust the position of the function to the X 
 </table>
 <ul>
 <li>There are 17 states in the Q-table (total states 90) where the created policy is not aligned with the optimal. Two of them worth mention:  <ul>
-<li>The agent with a left waypoint, green light always ignores the forward oncoming traffic.  </li>
-<li>In some occasions with a right waypoint, and green light it continues forward instead of turning right.  </li>
+<li>The agent with a left waypoint, green light always ignores the forward oncoming traffic.<br>
+<em>Example</em>:<br>
+('left', 'green', 'forward', 'left')<br>
+-- forward : 0.11<br>
+-- right : 0.00<br>
+-- None : -3.70<br>
+-- left : 0.81  </li>
+<li>In some occasions with a right waypoint, and green light it continues forward instead of turning right.<br>
+<em>Example</em>:<br>
+('right', 'green', 'forward', 'right')<br>
+-- forward : 1.37<br>
+-- right : 0.00<br>
+-- None : 0.00<br>
+-- left : 0.77<br>
+On both examples above we can see '0.00' on some actions. This is an indication that the agent has not fully explored all the states and more training trials are needed.     </li>
 </ul>
 </li>
 <li><p>81% of the time the agent take the right decision. Let's explore a few examples from the Q-table:</p>
 <ul>
-<li><p>The agent wants to turn right with a red light and on oncoming or left traffic. We can see that it takes the right decision to turn right.<br>
+<li>The agent wants to turn right with a red light and on oncoming or left traffic. We can see that it takes the right decision to turn right.<br>
 ('right', 'red', None, None)<br>
 -- forward : -9.96<br>
 <strong>-- right : 1.99</strong><br>
 -- None : 0.60<br>
--- left : -10.00</p>
-</li>
+-- left : -10.00  </li>
 <li><p>The agent wants to turn right with a green light. We can see that it takes the right decision to turn right.<br>
 ('right', 'green', None, None)<br>
 -- forward : 0.55<br>
